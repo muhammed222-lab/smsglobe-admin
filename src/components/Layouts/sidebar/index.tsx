@@ -61,7 +61,15 @@ export function Sidebar() {
         )}
         aria-label="Main navigation"
         aria-hidden={!isOpen}
-        inert={!isOpen}
+        ref={(el) => {
+          if (el) {
+            if (!isOpen) {
+              el.setAttribute("inert", "true");
+            } else {
+              el.removeAttribute("inert");
+            }
+          }
+        }}
       >
         <div className="flex h-full flex-col py-10 pl-[25px] pr-[7px]">
           <div className="relative pr-4.5">

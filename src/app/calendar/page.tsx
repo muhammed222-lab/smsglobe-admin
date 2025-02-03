@@ -1,5 +1,5 @@
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import CalendarBox from "@/components/CalenderBox";
+import Transactions from "@/components/TransactionsBox";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -12,7 +12,7 @@ const CalendarPage = () => {
     <>
       <Breadcrumb pageName="Transactions" />
 
-      <CalendarBox />
+      <Transactions />
     </>
   );
 };

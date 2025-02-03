@@ -1,126 +1,168 @@
-import type { Metadata } from "next";
+"use client";
 
-import { GlobeIcon } from "@/assets/icons";
+import { useState, useEffect, useRef } from "react";
+import { db } from "@/firebaseConfig";
+import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import DatePickerOne from "@/components/FormElements/DatePicker/DatePickerOne";
-import DatePickerTwo from "@/components/FormElements/DatePicker/DatePickerTwo";
-import InputGroup from "@/components/FormElements/InputGroup";
-import { TextAreaGroup } from "@/components/FormElements/InputGroup/text-area";
-import MultiSelect from "@/components/FormElements/MultiSelect";
-import { Checkbox } from "@/components/FormElements/checkbox";
-import { RadioInput } from "@/components/FormElements/radio";
-import { Select } from "@/components/FormElements/select";
-import { Switch } from "@/components/FormElements/switch";
 import { ShowcaseSection } from "@/components/Layouts/showcase-section";
 
-export const metadata: Metadata = {
-  title: "Form Elements",
-};
-
 export default function FormElementsPage() {
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [color, setColor] = useState("#000000");
+  const [isDirty, setIsDirty] = useState(false);
+  const editorRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    async function fetchMessage() {
+      try {
+        const docRef = doc(db, "in-app-msg", "latest");
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          setMessage(docSnap.data().message);
+        } else {
+          console.log("No such document!");
+        }
+      } catch (error) {
+        console.error("Error fetching message:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchMessage();
+  }, []);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isDirty) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [isDirty]);
+
+  const handleUpdate = async () => {
+    try {
+      const docRef = doc(db, "in-app-msg", "latest");
+      await setDoc(docRef, {
+        message: editorRef.current?.innerHTML || "",
+        date: serverTimestamp(),
+      });
+      alert("Message updated successfully!");
+      setIsDirty(false);
+    } catch (error) {
+      console.error("Error updating message:", error);
+      alert("Failed to update message.");
+    }
+  };
+
+  const applyStyle = (command: string, value?: string) => {
+    document.execCommand(command, false, value);
+    setIsDirty(true);
+  };
+
+  const handleInput = () => {
+    setIsDirty(true);
+  };
+
+  if (loading) return <div>Loading...</div>;
+
   return (
     <>
       <Breadcrumb pageName="Form Elements" />
-
-      <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">
-        <div className="flex flex-col gap-9">
-          <ShowcaseSection title="Input Fields" className="space-y-5.5 !p-6.5">
-            <InputGroup
-              label="Default input"
-              placeholder="Default input text"
-              type="text"
-            />
-
-            <InputGroup
-              label="Active input"
-              placeholder="Active input text"
-              active
-              type="text"
-            />
-
-            <InputGroup
-              label="Disabled input"
-              placeholder="Disabled input text"
-              type="text"
-              disabled
-            />
-          </ShowcaseSection>
-
-          <ShowcaseSection
-            title="Toggle switch input"
-            className="space-y-5.5 !p-6.5"
-          >
-            <Switch />
-            <Switch backgroundSize="sm" />
-            <Switch withIcon />
-            <Switch background="dark" />
-          </ShowcaseSection>
-
-          <ShowcaseSection title="Time and date" className="space-y-5.5 !p-6.5">
-            <DatePickerOne />
-            <DatePickerTwo />
-          </ShowcaseSection>
-
-          <ShowcaseSection title="File upload" className="space-y-5.5 !p-6.5">
-            <InputGroup
-              type="file"
-              fileStyleVariant="style1"
-              label="Attach file"
-              placeholder="Attach file"
-            />
-
-            <InputGroup
-              type="file"
-              fileStyleVariant="style2"
-              label="Attach file"
-              placeholder="Attach file"
-            />
-          </ShowcaseSection>
-        </div>
-
+      <div className="mb-4 flex items-center justify-end">
+        <span
+          className={`h-3 w-3 rounded-full ${
+            isDirty ? "bg-red-500" : "bg-green-500"
+          }`}
+          title={isDirty ? "Unsaved changes" : "Data up-to-date"}
+        ></span>
+        <span className="ml-2">
+          {isDirty ? "Unsaved changes" : "Data up-to-date"}
+        </span>
+      </div>
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-1">
+        <div className="flex flex-col gap-9"></div>
         <div className="flex flex-col gap-9">
           <ShowcaseSection title="Textarea Fields" className="space-y-6 !p-6.5">
-            <TextAreaGroup
-              label="Default textarea"
-              placeholder="Default textarea"
-            />
-
-            <TextAreaGroup
-              label="Active textarea"
-              placeholder="Active textarea"
-              active
-            />
-
-            <TextAreaGroup
-              label="Disabled textarea"
-              placeholder="Disabled textarea"
-              disabled
-            />
-          </ShowcaseSection>
-
-          <ShowcaseSection title="Select input" className="space-y-5.5 !p-6.5">
-            <Select
-              label="Select Country"
-              items={[
-                { label: "United States", value: "USA" },
-                { label: "United Kingdom", value: "UK" },
-                { label: "Canada", value: "Canada" },
-              ]}
-              defaultValue="USA"
-              prefixIcon={<GlobeIcon />}
-            />
-            <MultiSelect id="multiSelect" />
-          </ShowcaseSection>
-
-          <ShowcaseSection
-            title="Checkbox and radio"
-            className="space-y-5.5 !p-6.5"
-          >
-            <Checkbox label="Checkbox Text" />
-            <Checkbox label="Checkbox Text" withIcon="check" />
-            <Checkbox label="Checkbox Text" withIcon="x" />
-            <RadioInput label="Checkbox Text" />
-            <RadioInput label="Checkbox Text" variant="circle" />
+            <div className="mb-4 flex gap-2">
+              <button
+                onClick={() => applyStyle("bold")}
+                className="rounded bg-gray-200 p-2"
+                title="Bold"
+              >
+                <strong>B</strong>
+              </button>
+              <button
+                onClick={() => applyStyle("italic")}
+                className="rounded bg-gray-200 p-2"
+                title="Italic"
+              >
+                <em>I</em>
+              </button>
+              <button
+                onClick={() => applyStyle("fontSize", "7")}
+                className="rounded bg-gray-200 p-2"
+                title="H1"
+              >
+                H1
+              </button>
+              <button
+                onClick={() => applyStyle("fontSize", "6")}
+                className="rounded bg-gray-200 p-2"
+                title="H2"
+              >
+                H2
+              </button>
+              <button
+                onClick={() => applyStyle("fontSize", "5")}
+                className="rounded bg-gray-200 p-2"
+                title="H3"
+              >
+                H3
+              </button>
+              <button
+                onClick={() => applyStyle("fontSize", "4")}
+                className="rounded bg-gray-200 p-2"
+                title="H4"
+              >
+                H4
+              </button>
+              <input
+                type="color"
+                value={color}
+                onChange={(e) => setColor(e.target.value)}
+                className="rounded bg-gray-200 p-2"
+                title="Text Color"
+              />
+              <button
+                onClick={() => applyStyle("foreColor", color)}
+                className="rounded bg-gray-200 p-2"
+                title="Apply Color"
+              >
+                <span style={{ color }}>A</span>
+              </button>
+            </div>
+            <div
+              ref={editorRef}
+              contentEditable
+              className="min-h-[200px] rounded border p-4"
+              dangerouslySetInnerHTML={{ __html: message }}
+              onInput={handleInput}
+            ></div>
+            <button
+              onClick={handleUpdate}
+              className="rounded-md bg-green-600 p-2 text-white"
+            >
+              Update In-App Message
+            </button>
           </ShowcaseSection>
         </div>
       </div>

@@ -1,4 +1,31 @@
 import * as logos from "@/assets/logos";
+import { db } from "@/firebaseConfig";
+import { collection, getDocs, Timestamp } from "firebase/firestore";
+
+type ReferralData = {
+  id: string;
+  refer_by_name: string;
+  refer_by_email: string;
+  user_name: string;
+  user_email: string;
+  commission: number;
+  refer_date: Timestamp;
+};
+
+export async function getReferralData(): Promise<ReferralData[]> {
+  const refersCollection = collection(db, "refers");
+  const refersSnapshot = await getDocs(refersCollection);
+  const refersList = refersSnapshot.docs.map((doc) => ({
+    id: doc.id,
+    refer_by_name: doc.data().refer_by_name,
+    refer_by_email: doc.data().refer_by_email,
+    user_name: doc.data().user_name,
+    user_email: doc.data().user_email,
+    commission: doc.data().commission,
+    refer_date: doc.data().refer_date,
+  })) as ReferralData[];
+  return refersList;
+}
 
 export async function getTopProducts() {
   // Fake delay

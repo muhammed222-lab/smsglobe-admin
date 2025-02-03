@@ -30,7 +30,7 @@ function ProtectedLayout({ children }: PropsWithChildren) {
   if (loading) return <div className="loading-screen">Loading...</div>;
 
   if (!user && isAuthPage) {
-    return children;
+    return <>{children}</>;
   }
 
   return (

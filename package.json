@@ -9,7 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.0",
     "apexcharts": "^4.4.0",
+    "chart.js": "^4.4.7",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
@@ -21,6 +23,7 @@
     "nextjs-toploader": "^3.7.15",
     "react": "18.3.1",
     "react-apexcharts": "^1.7.0",
+    "react-chartjs-2": "^5.3.0",
     "react-dom": "18.3.1",
     "react-icons": "^5.4.0",
     "react-quill": "^2.0.0",

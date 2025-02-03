@@ -1,3 +1,5 @@
+"use client";
+import { useEffect, useState } from "react";
 import { DotIcon } from "@/assets/icons";
 import { formatMessageTime } from "@/lib/format-message-time";
 import { cn } from "@/lib/utils";
@@ -5,8 +7,23 @@ import Image from "next/image";
 import Link from "next/link";
 import { getChatsData } from "../fetch";
 
-export async function ChatsCard() {
-  const data = await getChatsData();
+const ChatsCard = () => {
+  const [data, setData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      const chatsData = await getChatsData();
+      setData(chatsData);
+      setLoading(false);
+    }
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="col-span-12 rounded-[10px] bg-white py-6 shadow-1 dark:bg-gray-dark dark:shadow-card xl:col-span-4">
@@ -75,4 +92,6 @@ export async function ChatsCard() {
       </ul>
     </div>
   );
-}
+};
+
+export default ChatsCard;

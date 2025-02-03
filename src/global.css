@@ -1,0 +1,15 @@
+@keyframes blink {
+  0% {
+    background-color: white;
+  }
+  50% {
+    background-color: #d4edda;
+  } /* Light green */
+  100% {
+    background-color: white;
+  }
+}
+
+.animate-blink {
+  animation: blink 2s infinite;
+}
