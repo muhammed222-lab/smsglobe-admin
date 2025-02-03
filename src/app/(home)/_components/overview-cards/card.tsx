@@ -1,6 +1,6 @@
 import { ArrowDownIcon, ArrowUpIcon } from "@/assets/icons";
 import { cn } from "@/lib/utils";
-import type { JSX, SVGProps } from "react";
+import type { SVGProps } from "react";
 
 type PropsType = {
   label: string;
