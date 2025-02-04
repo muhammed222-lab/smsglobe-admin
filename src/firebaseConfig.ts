@@ -1,4 +1,3 @@
-// firebaseConfig.ts
 import { initializeApp } from "firebase/app";
 import { getAuth, sendSignInLinkToEmail } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
@@ -12,6 +11,7 @@ export const sendEmailVerification = async (email: string) => {
   await sendSignInLinkToEmail(auth, email, actionCodeSettings);
   window.localStorage.setItem("emailForSignIn", email);
 };
+
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
