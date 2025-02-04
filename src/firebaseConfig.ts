@@ -1,8 +1,17 @@
-import { initializeApp, getApps } from "firebase/app";
+import { initializeApp } from "firebase/app";
 import { getAuth, sendSignInLinkToEmail } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
-// Firebase configuration from environment variables
+export const sendEmailVerification = async (email: string) => {
+  const auth = getAuth();
+  const actionCodeSettings = {
+    url: "./", // Update this URL to your app's URL
+    handleCodeInApp: true,
+  };
+  await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+  window.localStorage.setItem("emailForSignIn", email);
+};
+
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -14,26 +23,8 @@ const firebaseConfig = {
   databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
 };
 
-// Prevent re-initialization during hot reloads or SSR
-let app;
-if (typeof window !== "undefined" && !getApps().length) {
-  app = initializeApp(firebaseConfig);
-}
-
-const auth = app ? getAuth(app) : null;
-const db = app ? getFirestore(app) : null;
-
-// Email verification function
-export const sendEmailVerification = async (email: string) => {
-  if (!auth) return;
-
-  const actionCodeSettings = {
-    url: process.env.NEXT_PUBLIC_APP_URL || "/", // Update to your live app URL
-    handleCodeInApp: true,
-  };
-
-  await sendSignInLinkToEmail(auth, email, actionCodeSettings);
-  window.localStorage.setItem("emailForSignIn", email);
-};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 export { auth, db };
