@@ -46,25 +46,41 @@ const OverviewCards = () => {
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-      <div className="relative rounded border bg-white p-4">
+      <div className="relative h-[100px] rounded border bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
         <div className="absolute right-2 top-2 h-3 w-3 animate-pulse rounded-full bg-green-500"></div>
-        <h3 className="text-lg font-semibold">Total Users</h3>
-        <p className="text-2xl">{data?.totalUsers}</p>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          Total Users
+        </h3>
+        <p className="mt-2 text-3xl text-gray-900 dark:text-white">
+          {data?.totalUsers}
+        </p>
       </div>
-      <div className="relative rounded border bg-white p-4">
+      <div className="relative h-[100px] rounded border bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
         <div className="absolute right-2 top-2 h-3 w-3 animate-pulse rounded-full bg-green-500"></div>
-        <h3 className="text-lg font-semibold">Total Referral Users</h3>
-        <p className="text-2xl">{data?.totalReferralUsers}</p>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          Total Referral Users
+        </h3>
+        <p className="mt-2 text-3xl text-gray-900 dark:text-white">
+          {data?.totalReferralUsers}
+        </p>
       </div>
-      <div className="relative rounded border bg-white p-4">
+      <div className="relative h-[100px] rounded border bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
         <div className="absolute right-2 top-2 h-3 w-3 animate-pulse rounded-full bg-green-500"></div>
-        <h3 className="text-lg font-semibold">Total Money in System</h3>
-        <p className="text-2xl">{formatCurrency(data?.totalMoney || 0)}</p>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          Total Money in System
+        </h3>
+        <p className="mt-2 text-3xl text-gray-900 dark:text-white">
+          {formatCurrency(data?.totalMoney || 0)}
+        </p>
       </div>
-      <div className="relative rounded border bg-white p-4">
+      <div className="relative h-[100px] rounded border bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
         <div className="absolute right-2 top-2 h-3 w-3 animate-pulse rounded-full bg-green-500"></div>
-        <h3 className="text-lg font-semibold">Total Deposits</h3>
-        <p className="text-2xl">{formatCurrency(data?.totalDeposits || 0)}</p>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          Total Deposits
+        </h3>
+        <p className="mt-2 text-3xl text-gray-900 dark:text-white">
+          {formatCurrency(data?.totalDeposits || 0)}
+        </p>
       </div>
       <div className="col-span-1 md:col-span-2 xl:col-span-4">
         <BarChart data={chartData} />

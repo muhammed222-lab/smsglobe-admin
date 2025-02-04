@@ -41,7 +41,7 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
     ],
   };
 
-  return <Line data={chartData} />;
+  return <Line className="bg-white p-2" data={chartData} />;
 };
 
 export default LineChart;

@@ -9,9 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@canvasjs/charts": "^3.11.0",
+    "@canvasjs/react-stockcharts": "^1.0.2",
     "@headlessui/react": "^2.2.0",
     "apexcharts": "^4.4.0",
     "chart.js": "^4.4.7",
+    "chartjs-plugin-zoom": "^2.2.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
